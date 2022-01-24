@@ -1,5 +1,7 @@
 //useRefを利用できるようにする(TODO入力フォームで利用)
 import { useRef } from 'react';
+import { Container } from '@chakra-ui/react';
+import { AddIcon } from '@chakra-ui/icons';
 import { useTodo } from '../hooks/useTodo';
 import { TodoTitle } from './TodoTitle';
 import { TodoAdd } from './TodoAdd';
@@ -43,17 +45,26 @@ function App() {
   });
 
   return (
-    <>
+    // Containerコンポーネントはデフォルトでdivタグとして書き出される
+    // centerContentでcenter寄せのレイアウトになる
+    <Container centerContent p={{ base: '4', md: '6' }} maxwidth='3xl'>
       {/* h1見出しタグをTodoTitleコンポーネントに */}
       {/* 見出しに表示させたいテキストをtitleに代入して子コンポーネントへpropsとして渡す */}
-      <TodoTitle title='TODO進捗管理' as='h1' />
-      {/* TODO追加フォーム TodoAddコンポーネントを作成 */}
-      {/* useTodo()カスタムフックで作成したhandleAddTodoListItem関数を子コンポーネントへpropsで渡す */}
-      {/* 「+ TODOを追加」ボタンをクリックでhandleAddTodoListItem関数を実行 */}
+      <TodoTitle
+        title='TODO進捗管理'
+        as='h1'
+        // TODO追加フォーム TodoAddコンポーネントを作成
+        // useTodo()カスタムフックで作成したhandleAddTodoListItem関数を子コンポーネントへpropsで渡す
+        // 「+ TODOを追加」ボタンをクリックでhandleAddTodoListItem関数を実行
+        fontSize={{ base: '2xl', md: '3xl' }}
+      />
       <TodoAdd
+        placeholder='ADD TODO'
+        // ボタン左側に表示させたいiconをpropsで子コンポーネントに渡す
+        leftIcon={<AddIcon />}
         // ボタンに表示させるテキストをbuttonTextに代入してpropsで
         // 子コンポーネントに渡す
-        buttonText='+ TODOに追加'
+        buttonText='TODOを追加'
         inputEl={inputEl}
         handleAddTodoListItem={handleAddTodoListItem}
       />
@@ -73,6 +84,7 @@ function App() {
         title='未完了TODOリスト'
         // 見出しのh2をasに代入してpropsで子コンポーネントに渡す
         as='h2'
+        fontSize={{ base: 'xl', md: '2xl' }}
       />
       <TodoList
         todoList={completedList}
@@ -83,8 +95,9 @@ function App() {
         title='完了TODOリスト'
         // 見出しのh2をasに代入してpropsで子コンポーネントに渡す
         as='h2'
+        fontSize={{ base: 'xl', md: '2xl' }}
       />
-    </>
+    </Container>
   );
 }
 

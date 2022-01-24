@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ulid } from 'ulid';
 // todoDataオブジェクトをまとめてimport
-import * as todoData from '../api/todos';
+import * as todoData from '../apis/todos';
 
 // todoListを更新するための関数、初期値は空の配列をセット
 export const useTodo = () => {

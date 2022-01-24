@@ -1,3 +1,4 @@
+import { List } from '@chakra-ui/react';
 import { TodoItem } from './TodoItem';
 import { TodoTitle } from './TodoTitle';
 
@@ -9,6 +10,7 @@ export const TodoList = ({
   deleteTodoListItem,
   title,
   as,
+  fontSize
 }) => {
   return (
     <>
@@ -16,8 +18,8 @@ export const TodoList = ({
       {/* 両方を表示させない */}
       {todoList.length !== 0 && (
         <>
-          <TodoTitle title={title} as={as} />
-          <ul>
+          <TodoTitle title={title} as={as} fontSize={fontSize} mt="12" />
+          <List w="full">
             {/* map()を利用してtodoListの要素を1つひとつ取り出す  */}
             {todoList.map((todo) => (
               // TodoItemに一意なIDをkey属性の値として付与
@@ -29,7 +31,7 @@ export const TodoList = ({
                 deleteTodoListItem={deleteTodoListItem}
               />
             ))}
-          </ul>
+          </List>
         </>
       )}
     </>
