@@ -21,7 +21,7 @@ export const useTodo = () => {
 
   // todoListの完了/未完了の真偽値を反転させて
   // 更新するtoggleTodoListItemStatus関数を宣言
-  const toggleListItemStatus = (id, done) => {
+  const toggleTodoListItemStatus = (id, done) => {
     // find()は配列から条件に合う値を見つけて最初にtrueになった要素の値を返し、
     // 要素を見つけた時点で処理を停止する
     // 完了/未完了の状態を反転させたいtodoListItemのidを見つけて
@@ -83,7 +83,7 @@ export const useTodo = () => {
   // 作成した関数を返す
   return {
     todoList,
-    toggleListItemStatus,
+    toggleTodoListItemStatus,
     addTodoListItem,
     deleteTodoListItem,
   };

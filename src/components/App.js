@@ -1,55 +1,36 @@
+//useRefを利用できるようにする(TODO入力フォームで利用)
+import { useRef } from 'react';
 import { useTodo } from '../hooks/useTodo';
-
-// TodoTitleコンポーネントを作成
-// 見出しタグがh1,h2mp場合の条件分岐を作成しておく
-// 親コンポーネントからtitle,asをpropsとして受け取る
-
-const TodoTitle = ({ title, as }) => {
-  // asがh1ならタイトルはh1たぐ
-  if (as === 'h1') return <h1>{title}</h1>;
-
-  // asがh2ならタイトルはh1たぐ
-  if (as === 'h2') return <h1>{title}</h1>;
-  return <p>{title}</p>;
-};
-
-// TodoItemコンポーネントを作成
-//  親コンポーネントからtodoをpropsとして受け取る
-
-const TodoItem = ({ todo }) => {
-  return (
-    <li>
-      {/* TODOの内容 */}
-      {todo.content}
-      {/* TODOが完了の場合は「未完了リストへ」、未完了の場合は「完了リストへ」と表示するボタンを設置する */}
-      <button> {todo.done ? '未完了リストへ' : '完了リストへ'}</button>
-      <button>削除</button>
-    </li>
-  );
-};
-
-// TodoListコンポーネントを作成
-//  親コンポーネントからtodoListをpropsとして受け取る
-const TodoList = ({ todoList }) => {
-  return (
-    <ul>
-      {/* map()を利用してtodoListの要素を1つひとつ取り出す  */}
-      {todoList.map((todo) => (
-        // TodoItemに一意なIDをkey属性の値として付与
-        // todoListから取り出したtodoを子コンポーネントへpropsとして渡す
-        <TodoItem todo={todo} key={todo.id} />
-      ))}
-    </ul>
-  );
-};
+import { TodoTitle } from './TodoTitle';
+import { TodoAdd } from './TodoAdd';
+import { TodoList } from './TodoList';
 
 // todoList/setTodoListを更新するための関数(初期値に空の配列をセット)
 function App() {
-  // useTodo()カスタムフックで作成したtodoListを利用できるようにする
-  const { todoList } = useTodo();
+  // useTodo()カスタムフックで作成したtodoList,addTodoListItem,
+  // toggleTodoListItemStatus,deleteTodoListItemを利用できるようにする
+  const {
+    todoList,
+    addTodoListItem,
+    toggleTodoListItemStatus,
+    deleteTodoListItem,
+  } = useTodo();
 
-  // console.logで取得したTODOリストを表示する
-  console.log('TODOリスト', todoList);
+  // useRefでrefオブジェクトを作成(TODO入力フォームで利用)
+  const inputEl = useRef(null);
+
+  // TODO入力フォームで入力された文字列を新しいTODOに登録するための
+  // handleAddTodoListItem関数を宣言
+  const handleAddTodoListItem = () => {
+    // 何も入力されていない場合にクリックしても何も返さない
+    if (inputEl.current.value === '') return;
+    // テキストエリアに入力されたテキストを新規TODOとして追加
+    // 追加したらテキストエリアを空の文字列にする
+    // 新規TODOを追加するaddTodoListItem関数を
+    // 「+ TODOを追加」ボタンをクリックで実行
+    addTodoListItem(inputEl.current.value);
+    inputEl.current.value = '';
+  };
 
   // 「TODOの状態が未完了」の要素をもつ新しい配列を作成
   const inCompletedList = todoList.filter((todo) => {
@@ -66,23 +47,43 @@ function App() {
       {/* h1見出しタグをTodoTitleコンポーネントに */}
       {/* 見出しに表示させたいテキストをtitleに代入して子コンポーネントへpropsとして渡す */}
       <TodoTitle title='TODO進捗管理' as='h1' />
-      <textarea />
-      <button>+ TODOを追加</button>
-      {/* h2見出しタグをTodoTitleコンポーネントに */}
-      {/* 見出しに表示させたいテキストをtitleに代入して子コンポーネントへpropsとして渡す */}
-      <TodoTitle title='未完了TODOリスト' as='h2' />
+      {/* TODO追加フォーム TodoAddコンポーネントを作成 */}
+      {/* useTodo()カスタムフックで作成したhandleAddTodoListItem関数を子コンポーネントへpropsで渡す */}
+      {/* 「+ TODOを追加」ボタンをクリックでhandleAddTodoListItem関数を実行 */}
+      <TodoAdd
+        // ボタンに表示させるテキストをbuttonTextに代入してpropsで
+        // 子コンポーネントに渡す
+        buttonText='+ TODOに追加'
+        inputEl={inputEl}
+        handleAddTodoListItem={handleAddTodoListItem}
+      />
 
       {/* TodoListコンポーネント */}
       {/* 未完了TODOリストをinCompletedListをtodoListに代入して子コンポーネントへpropsとして渡す */}
-      <TodoList todoList={inCompletedList} />
-
-      {/* h2見出しタグをTodoTitleコンポーネントに */}
-      {/* 見出しに表示させたいテキストをtitleに代入して子コンポーネントへpropsとして渡す */}
-      <TodoTitle title='完了TODOリスト' as='h2' />
-
-      {/* TodoListコンポーネント */}
-      {/* 未完了TODOリストをCompletedListをtodoListに代入して子コンポーネントへpropsとして渡す */}
-      <TodoList todoList={completedList} />
+      {/* toggleTodoListItemStatus関数はtodoListItemの完了/未完了 */}
+      {/* を反転させて更新する */}
+      {/* deleteTodoListItem関数は各TODOに設置した「削除」ボタンを */}
+      {/* クリックしたときに実行してTODOを削除する */}
+      <TodoList
+        todoList={inCompletedList}
+        toggleTodoListItemStatus={toggleTodoListItemStatus}
+        deleteTodoListItem={deleteTodoListItem}
+        // TodoListコンポーネント内にTodoTitleコンポーネントをimport
+        // しているので見出しテキストをpropsで子コンポーネントに渡す
+        title='未完了TODOリスト'
+        // 見出しのh2をasに代入してpropsで子コンポーネントに渡す
+        as='h2'
+      />
+      <TodoList
+        todoList={completedList}
+        toggleTodoListItemStatus={toggleTodoListItemStatus}
+        deleteTodoListItem={deleteTodoListItem}
+        // TodoListコンポーネント内にTodoTitleコンポーネントをimport
+        // しているので見出しテキストをpropsで子コンポーネントに渡す
+        title='完了TODOリスト'
+        // 見出しのh2をasに代入してpropsで子コンポーネントに渡す
+        as='h2'
+      />
     </>
   );
 }
