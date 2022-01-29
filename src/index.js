@@ -11,7 +11,7 @@ ReactDOM.render(
     {/* Chakra-UIを正しく機能さるためにアプリケーションのルートで */}
     {/* ChakraProviderを設置 */}
     {/* ChakraProviderに作成したthemeを渡す */}
-    <ChakraProvider theme={theme} resetCSS={false}>
+    <ChakraProvider theme={theme}>
       <App />
     </ChakraProvider>
   </StrictMode>,
